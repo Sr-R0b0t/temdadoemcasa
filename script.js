@@ -308,7 +308,7 @@ function roll() {
       .replace(/\{A\}/g, `<b>${esc(P[turn])}</b>`)
       .replace(/\{B\}/g, `<b>${esc(P[1 - turn])}</b>`);
 
-    $("act").innerHTML = action;
+    $("act").innerHTML = `<span>${action}</span>`;
 
     $("b-roll").textContent = "Próxima vez";
     $("b-roll").disabled = false;
