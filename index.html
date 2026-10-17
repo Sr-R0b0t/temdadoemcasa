@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b0c">
+
+  <!-- SEO -->
+  <meta name="description" content="Dado. Um jogo para dois adultos, com desafios, diversão e respeito ao consentimento.">
+  <meta name="robots" content="index, follow">
+  <title>Tem Dado Em Casa. | Um jogo para dois</title>
+  <!-- FAVICON -->
+  <link rel="icon" type="image/png" href="./logo.png">
+  <link rel="apple-touch-icon" href="./logo.png">
+
+  <!-- OPEN GRAPH: WHATSAPP, FACEBOOK E LINKEDIN -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Dado.">
+  <meta property="og:title" content="Dado. | Um jogo para dois">
+  <meta property="og:description" content="Um jogo para dois adultos. Escolham a fase, girem o dado e aproveitem a experiência com respeito e consentimento.">
+  <meta property="og:url" content="https://dado-desejo.netlify.app/">
+  <meta property="og:image" content="https://dado-desejo.netlify.app/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Dado. — um jogo para dois com identidade visual preta e vermelha.">
+  <!-- X / TWITTER -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dado. | Um jogo para dois">
+  <meta name="twitter:description" content="Um jogo para dois adultos, com desafios, diversão e respeito ao consentimento.">
+  <meta name="twitter:image" content="https://dado-desejo.netlify.app/og-image.jpg">
+  <!-- CSS -->
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+  <!-- CONFIRMAÇÃO DE IDADE -->
+  <section id="s-age" class="screen on">
+    <h1>18<b>+</b></h1>
+
+    <p class="sub" id="age-msg">
+      Este jogo contém conteúdo adulto e é destinado apenas a maiores de 18 anos.<br>
+      Você confirma que tem 18 anos ou mais?
+    </p>
+
+    <div class="row">
+      <button id="b-yes">Sim, tenho 18+</button>
+      <button id="b-no" class="ghost">Não</button>
+    </div>
+  </section>
+
+  <!-- TELA INICIAL -->
+  <section id="s-start" class="screen">
+    <h1>Tem Dado Em Casa<b>?</b></h1>
+
+    <p class="sub">
+      Um jogo para dois.<br>
+      Sempre com consentimento: quem não quiser, pula.
+    </p>
+
+    <button id="b-start">Iniciar</button>
+  </section>
+
+  <!-- NOMES DOS JOGADORES -->
+  <section id="s-names" class="screen">
+    <h2>Quem vai jogar?</h2>
+
+    <input id="n1" placeholder="Primeiro nome" maxlength="20" autocomplete="off">
+
+    <input id="n2" placeholder="Segundo nome" maxlength="20" autocomplete="off">
+
+    <button id="b-go">Começar</button>
+  </section>
+
+  <!-- SELEÇÃO DE FASE -->
+  <section id="s-level" class="screen">
+    <h2>Por onde começar?</h2>
+
+    <p class="sub">
+      A fase sobe sozinha a cada 6 jogadas.
+    </p>
+
+    <div class="lvlist" id="lvlist"></div>
+  </section>
+
+  <!-- JOGO -->
+  <section id="s-game" class="screen">
+    <div class="level" id="lvl"></div>
+
+    <div class="bar" id="bar">
+      <i></i>
+      <i></i>
+      <i></i>
+      <i></i>
+      <i></i>
+    </div>
+
+    <div class="turn" id="turn"></div>
+
+    <div class="die" id="die">⚀</div>
+
+    <div class="action" id="act">
+      Gire o dado
+    </div>
+
+    <div class="row">
+      <button id="b-roll">Girar dado</button>
+      <button id="b-skip" class="ghost" disabled>
+        Pular
+      </button>
+    </div>
+
+    <button id="b-end" class="ghost">
+      Encerrar
+    </button>
+  </section>
+
+  <!-- AVISO DE NOVA FASE -->
+  <div class="banner" id="banner">
+    <div class="level">Nova fase</div>
+    <h1 id="bt"></h1>
+  </div>
+
+  <!-- AVISO DE PRIVACIDADE -->
+  <div class="priv" id="priv">
+    <p>
+      Usamos armazenamento local do navegador. Parceiros de publicidade
+      poderão usar tecnologias de armazenamento conforme suas escolhas
+      de privacidade.
+      <a href="#" id="priv-more">Saiba mais</a>
+    </p>
+
+    <button id="priv-ok">Aceitar</button>
+  </div>
+
+  <!-- DETALHES DE PRIVACIDADE -->
+  <div class="banner" id="privmodal" role="dialog" aria-modal="true" aria-label="Privacidade">
+    <div class="level">Privacidade</div>
+
+    <p class="sub" style="max-width:360px;text-align:left">
+      Os nomes digitados são utilizados durante a partida e não são enviados
+      pelo código do jogo a um servidor.<br><br>
+
+      A confirmação de idade e a escolha de privacidade são armazenadas
+      localmente no navegador.<br><br>
+
+      Se a publicidade for ativada, os parceiros poderão processar dados
+      técnicos e utilizar cookies ou tecnologias semelhantes, conforme
+      a configuração dos anúncios e as escolhas de privacidade.<br><br>
+
+      Contato: <b>fabola.cristovam@gmail.com</b>
+    </p>
+
+    <button id="priv-close" class="ghost">
+      Fechar
+    </button>
+  </div>
+
+  <div class="ad-container">
+    <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js">
+    </script>
+
+    <ins class="eas6a97888e2" data-zoneid="6057734">
+    </ins>
+
+    <script>
+      (AdProvider = window.AdProvider || []).push({
+        "serve": {}
+      });
+    </script>
+  </div>
+
+  
+<!-- CRÉDITOS DO DESENVOLVEDOR -->
+<footer class="dev-credit">
+  Desenvolvido por
+  <a
+    href="https://www.linkedin.com/in/fabio-cristovam-4bb072264/?isSelfProfile=true"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Visitar meu perfil no LinkedIn"
+  >
+    Fabio Cristovam
+  </a>
+</footer>
+
+  <!-- LÓGICA DO JOGO -->
+  <script src="script.js"></script>
+
+</body>
+
+</html>
