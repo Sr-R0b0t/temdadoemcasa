@@ -1,0 +1,50 @@
+/* ===== CRONÔMETRO ===== */
+
+.timer {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.timer.on {
+  display: flex;
+  animation: in 0.4s ease;
+}
+
+.timer-clock {
+  min-width: 90px;
+  font-size: 1.7rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: var(--red);
+  font-variant-numeric: tabular-nums;
+}
+
+.timer-btn {
+  padding: 10px 22px;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+}
+
+.timer.running .timer-btn {
+  border-color: var(--line);
+  color: var(--mut);
+}
+
+.timer.running .timer-btn:hover {
+  background: transparent;
+  border-color: var(--mut);
+  color: var(--txt);
+  box-shadow: none;
+}
+
+.timer.done .timer-clock {
+  animation: timer-pulse 0.8s ease 3;
+}
+
+@keyframes timer-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.25); text-shadow: 0 0 18px #e11d2e; }
+}
