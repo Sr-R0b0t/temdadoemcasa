@@ -21,7 +21,11 @@
   btn.type = "button";
   btn.className = "timer-btn";
 
-  box.append(clock, btn);
+  const somBtn = document.createElement("button");
+  somBtn.type = "button";
+  somBtn.className = "timer-sound ghost";
+
+  box.append(clock, btn, somBtn);
   act.after(box);
 
   // ----- estado -----
@@ -30,6 +34,21 @@
   let tick = null;
   let lock = null;
   let audio = null;
+  let som = LS.get("timerSom") !== "0";
+
+  function rotuloSom() {
+    somBtn.textContent = som ? "🔔 Som" : "🔕 Mudo";
+    somBtn.setAttribute("aria-pressed", String(som));
+  }
+
+  somBtn.onclick = () => {
+    som = !som;
+    LS.set("timerSom", som ? "1" : "0");
+    rotuloSom();
+    if (som) prepararAudio();
+  };
+
+  rotuloSom();
 
   const fmt = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 
@@ -59,13 +78,26 @@
     }
   }
 
-  // ----- aviso final: vibra; se o aparelho não vibra (ex.: iPhone), toca um bipe -----
+  // ----- aviso final: vibra, toca bipe e pisca a tela (tudo junto) -----
   function prepararAudio() {
     try {
-      if (!audio && (window.AudioContext || window.webkitAudioContext)) {
-        audio = new (window.AudioContext || window.webkitAudioContext)();
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+
+      const novo = !audio;
+      if (!audio) audio = new Ctx();
+      if (audio.state === "suspended") audio.resume();
+
+      // Toque mudo e curtíssimo, dentro do clique, para o navegador liberar o som depois.
+      if (novo) {
+        const osc = audio.createOscillator();
+        const ganho = audio.createGain();
+        ganho.gain.value = 0.0001;
+        osc.connect(ganho);
+        ganho.connect(audio.destination);
+        osc.start();
+        osc.stop(audio.currentTime + 0.05);
       }
-      if (audio && audio.state === "suspended") audio.resume();
     } catch (e) {
       audio = null;
     }
@@ -74,24 +106,36 @@
   function bipe() {
     if (!audio) return;
 
-    [0, 0.3, 0.6].forEach(atraso => {
-      const osc = audio.createOscillator();
-      const ganho = audio.createGain();
-      osc.frequency.value = 880;
-      ganho.gain.value = 0.08;
-      osc.connect(ganho);
-      ganho.connect(audio.destination);
-      osc.start(audio.currentTime + atraso);
-      osc.stop(audio.currentTime + atraso + 0.15);
-    });
+    const tocar = () => {
+      [0, 0.3, 0.6].forEach(atraso => {
+        const osc = audio.createOscillator();
+        const ganho = audio.createGain();
+        osc.frequency.value = 880;
+        ganho.gain.value = 0.3;
+        osc.connect(ganho);
+        ganho.connect(audio.destination);
+        osc.start(audio.currentTime + atraso);
+        osc.stop(audio.currentTime + atraso + 0.18);
+      });
+    };
+
+    if (audio.state === "running") {
+      tocar();
+    } else {
+      audio.resume().then(tocar).catch(() => {});
+    }
   }
 
   function avisar() {
-    if (navigator.vibrate) {
-      navigator.vibrate([300, 150, 300, 150, 500]);
-    } else {
-      bipe();
-    }
+    // 1) Pisca a tela (funciona em qualquer aparelho, mesmo no silencioso)
+    document.body.classList.add("timer-alert");
+    setTimeout(() => document.body.classList.remove("timer-alert"), 1800);
+
+    // 2) Vibra, quando o aparelho e o navegador permitem
+    if (navigator.vibrate) navigator.vibrate([400, 200, 400, 200, 600]);
+
+    // 3) Bipe, se o som estiver ligado
+    if (som) bipe();
   }
 
   // ----- controle -----

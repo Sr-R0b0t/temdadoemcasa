@@ -48,3 +48,26 @@
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.25); text-shadow: 0 0 18px #e11d2e; }
 }
+
+.timer-sound {
+  padding: 8px 12px;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+}
+
+/* Piscada vermelha quando o tempo acaba */
+body.timer-alert::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: #e11d2e;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 20;
+  animation: timer-flash 0.6s ease 3;
+}
+
+@keyframes timer-flash {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.35; }
+}
