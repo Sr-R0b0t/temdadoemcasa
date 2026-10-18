@@ -85,17 +85,17 @@ const LEVELS = [
       "{A} beija o corpo de {B} inteiro, descendo devagar, até onde {B} permitir",
       "{B} escolhe a posição e {A} segue o comando",
       "{A} e {B} na posição lótus: sentados, abraçados, pernas entrelaçadas",
-      "{A} deitado e {B} por cima de costas, em posição invertida",
-      "{A} e {B} na beira da cama: {B} deitado, {A} em pé",
-      "{A} sentado numa cadeira ou no sofá, {B} no colo de frente",
-      "{A} e {B} frente a frente em pé, com {B} apoiado em {A}",
+      "{A} deita e {B} fica por cima, de costas, em posição invertida",
+      "{A} e {B} na beira da cama: {B} deita e {A} fica em pé",
+      "{A} senta numa cadeira ou no sofá e {B} senta no colo, de frente",
+      "{A} e {B} frente a frente em pé, com {B} se apoiando em {A}",
       "{A} e {B} de lado, frente a frente, pernas entrelaçadas (posição tesoura)",
-      "{B} de joelhos na cama, apoiado, e {A} por trás, devagar",
+      "{B} de joelhos na cama, com apoio, e {A} por trás, devagar",
       "Papai e mamãe com as pernas de {B} elevadas nos ombros de {A}",
       "{A} e {B} no chuveiro ou perto de uma parede, com muito cuidado e carinho",
       "{A} e {B} trocam de posição a cada minuto, e {B} escolhe a próxima",
       "{A} e {B} deitados de conchinha, e {A} leva o ritmo bem lento",
-      "{B} sentado na borda de uma superfície firme e {A} de frente, em pé",
+      "{B} senta na borda de uma superfície firme e {A} fica de frente, em pé",
       "{A} e {B} sorteiam: cada um sugere uma posição e a escolha vai no par ou ímpar",
       "Posição livre: {A} e {B} escolhem juntos a favorita da noite",
       "{A} faz carícias íntimas em {B}, no ritmo que {B} pedir",
@@ -148,6 +148,13 @@ const HEAT = [
 // ==========================================
 
 $("b-start").onclick = () => show("s-names");
+
+// Troca a ordem dos nomes (quem começa).
+$("b-swap").onclick = () => {
+  const temp = $("n1").value;
+  $("n1").value = $("n2").value;
+  $("n2").value = temp;
+};
 
 $("b-go").onclick = () => {
   const a = $("n1").value.trim();

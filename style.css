@@ -515,6 +515,14 @@ input:focus {
   }
 }
 
+
+#b-swap {
+  padding: 8px 16px;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  margin: -8px 0;
+}
+
 /* ACESSIBILIDADE */
 
 @media (prefers-reduced-motion: reduce) {

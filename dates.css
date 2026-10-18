@@ -65,4 +65,10 @@
   line-height: 1.5;
 }
 
-
+/* Dado menor na tela de dates (a animação .die.roll vem do style.css) */
+#s-dates .die {
+  width: 96px;
+  height: 96px;
+  font-size: 2.2rem;
+  border-radius: 22px;
+}

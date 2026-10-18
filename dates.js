@@ -124,6 +124,11 @@
   const boxOrc = document.createElement("div");
   boxOrc.className = "chips";
 
+  const dado = document.createElement("div");
+  dado.className = "die";
+  dado.setAttribute("aria-hidden", "true");
+  dado.textContent = "⚀";
+
   const card = document.createElement("div");
   card.className = "datecard";
   card.textContent = "Escolha os filtros e sorteie um date.";
@@ -139,7 +144,7 @@
   bVoltar.textContent = "Voltar";
   linha.append(bSortear, bVoltar);
 
-  sec.append(titulo, rotulo("Clima"), boxClima, rotulo("Orçamento"), boxOrc, card, linha);
+  sec.append(titulo, rotulo("Clima"), boxClima, rotulo("Orçamento"), boxOrc, dado, card, linha);
   document.body.appendChild(sec);
 
   function criarChips(opcoes, chave, box) {
@@ -165,7 +170,7 @@
   criarChips(ORCS, "o", boxOrc);
 
   // ----- sorteio sem repetir até esgotar os resultados do filtro -----
-  function sortear() {
+  function mostrar() {
     const pool = DATES.map((_, i) => i).filter(i =>
       (filtro.c === "todos" || DATES[i].c === filtro.c) &&
       (filtro.o === "todos" || String(DATES[i].o) === filtro.o)
@@ -201,8 +206,50 @@
     bSortear.textContent = "Sortear outro";
   }
 
+  // ----- animação do dado (a mesma das telas do jogo) -----
+  const FACES = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+  let timerFaces = null;
+  let timerResultado = null;
+
+  function pararAnimacao() {
+    clearInterval(timerFaces);
+    clearTimeout(timerResultado);
+    timerFaces = null;
+    timerResultado = null;
+    dado.classList.remove("roll");
+    bSortear.disabled = false;
+  }
+
+  function sortear() {
+    if (bSortear.disabled) return;
+
+    bSortear.disabled = true;
+
+    dado.classList.remove("roll");
+    void dado.offsetWidth;
+    dado.classList.add("roll");
+
+    let n = 0;
+    timerFaces = setInterval(() => {
+      dado.textContent = FACES[Math.floor(Math.random() * FACES.length)];
+      if (++n > 8) {
+        clearInterval(timerFaces);
+        timerFaces = null;
+      }
+    }, 80);
+
+    timerResultado = setTimeout(() => {
+      timerResultado = null;
+      mostrar();
+      bSortear.disabled = false;
+    }, 750);
+  }
+
   bSortear.onclick = sortear;
-  bVoltar.onclick = () => show("s-start");
+  bVoltar.onclick = () => {
+    pararAnimacao();
+    show("s-start");
+  };
 
   // ----- botão na tela inicial -----
   const iniciar = $("b-start");

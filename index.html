@@ -69,9 +69,16 @@
   <section id="s-names" class="screen">
     <h2>Quem vai jogar?</h2>
 
-    <input id="n1" placeholder="Nome do primeiro Jogador" maxlength="20" autocomplete="off">
+    <p class="sub">
+      O 1º jogador começa. Combinem antes quem será o 1º e o 2º:
+      os papéis se alternam a cada jogada e qualquer ação pode ser pulada.
+    </p>
 
-    <input id="n2" placeholder="Nome do segundo Jogador" maxlength="20" autocomplete="off">
+    <input id="n1" placeholder="1º jogador (começa)" maxlength="20" autocomplete="off">
+
+    <button id="b-swap" class="ghost" type="button">⇅ Trocar ordem</button>
+
+    <input id="n2" placeholder="2º jogador" maxlength="20" autocomplete="off">
 
     <button id="b-go">Começar</button>
   </section>
@@ -81,7 +88,7 @@
     <h2>Por onde começar?</h2>
 
     <p class="sub">
-      A fase sobe sozinha a cada 6 jogadas.
+      A fase sobe sozinha a cada poucas jogadas.
     </p>
 
     <div class="lvlist" id="lvlist"></div>
