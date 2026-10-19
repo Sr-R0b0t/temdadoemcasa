@@ -148,6 +148,7 @@ const HEAT = [
 // ==========================================
 
 $("b-start").onclick = () => show("s-names");
+$("b-names-back").onclick = () => show("s-start");
 
 // Troca a ordem dos nomes (quem começa).
 $("b-swap").onclick = () => {
@@ -419,7 +420,7 @@ const LS = {
 function updatePriv() {
   const shouldShow =
     LS.get("ageOk") === "1" &&
-    LS.get("consent") !== "1";
+    LS.get("consent") === null;
 
   $("priv").classList.toggle("on", shouldShow);
 }
@@ -445,6 +446,11 @@ $("priv-ok").onclick = () => {
 
   updatePriv();
   prepararPublicidade();
+};
+
+$("priv-x").onclick = () => {
+  LS.set("consent", "0"); // 0 = recusado
+  updatePriv();
 };
 
 $("priv-more").onclick = event => {

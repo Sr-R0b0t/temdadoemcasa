@@ -145,7 +145,8 @@
   linha.append(bSortear, bVoltar);
 
   sec.append(titulo, rotulo("Clima"), boxClima, rotulo("Orçamento"), boxOrc, dado, card, linha);
-  document.body.appendChild(sec);
+  // Insere junto das outras telas (antes do rodapé), e não no fim do <body>.
+  $("s-level").after(sec);
 
   function criarChips(opcoes, chave, box) {
     opcoes.forEach(([valor, nome]) => {

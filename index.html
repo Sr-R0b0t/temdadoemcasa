@@ -8,7 +8,8 @@
   <meta name="theme-color" content="#0b0b0c">
 
   <!-- SEO -->
-  <meta name="description" content="Dado. Um jogo para dois adultos, com desafios, diversão e respeito ao consentimento.">
+  <meta name="description"
+    content="Dado. Um jogo para dois adultos, com desafios, diversão e respeito ao consentimento.">
   <meta name="robots" content="index, follow">
   <title>Tem Dado Em Casa. | Um jogo para dois</title>
   <!-- FAVICON -->
@@ -20,7 +21,8 @@
   <meta property="og:locale" content="pt_BR">
   <meta property="og:site_name" content="Tem Dado Em Casa?">
   <meta property="og:title" content="Tem Dado Em Casa? | Um jogo para dois">
-  <meta property="og:description" content="Um jogo para dois adultos. Escolham a fase, girem o dado e aproveitem a experiência com respeito e consentimento.">
+  <meta property="og:description"
+    content="Um jogo para dois adultos. Escolham a fase, girem o dado e aproveitem a experiência com respeito e consentimento.">
   <meta property="og:url" content="https://temdadoemcasa.com/">
   <meta property="og:image" content="https://temdadoemcasa.com/og-image.jpg">
   <meta property="og:image:width" content="1200">
@@ -29,7 +31,8 @@
   <!-- X / TWITTER -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Tem Dado Em Casa? | Um jogo para dois">
-  <meta name="twitter:description" content="Um jogo para dois adultos, com desafios, diversão e respeito ao consentimento.">
+  <meta name="twitter:description"
+    content="Um jogo para dois adultos, com desafios, diversão e respeito ao consentimento.">
   <meta name="twitter:image" content="https://temdadoemcasa.com/og-image.jpg">
   <!-- CSS -->
   <link rel="stylesheet" href="./style.css">
@@ -88,7 +91,10 @@
 
     <input id="n2" placeholder="2º jogador" maxlength="20" autocomplete="off">
 
-    <button id="b-go">Começar</button>
+    <div class="row">
+      <button id="b-go">Começar</button>
+      <button id="b-names-back" class="ghost" type="button">Voltar</button>
+    </div>
   </section>
 
   <!-- SELEÇÃO DE FASE -->
@@ -145,11 +151,14 @@
     <p>
       Usamos armazenamento local do navegador. Parceiros de publicidade
       poderão usar tecnologias de armazenamento conforme suas escolhas
-      de privacidade.
+      de privacidade. Se fechar este aviso, usamos apenas o essencial.
       <a href="#" id="priv-more">Saiba mais</a>
     </p>
 
-    <button id="priv-ok">Aceitar</button>
+    <div class="priv-actions">
+      <button id="priv-ok">Aceitar</button>
+      <button id="priv-x" class="ghost" type="button" aria-label="Fechar e recusar">&times;</button>
+    </div>
   </div>
 
   <!-- DETALHES DE PRIVACIDADE -->
@@ -175,34 +184,29 @@
     </button>
   </div>
 
-  
-<div class="ad-container">
-  <script async type="application/javascript"
-    src="https://a.magsrv.com/ad-provider.js"></script>
 
-  <ins class="eas6a97888e2" data-zoneid="6057750"></ins>
+  <div class="ad-container">
+    <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
 
-  <script>
-    (AdProvider = window.AdProvider || []).push({
-      "serve": {}
-    });
-  </script>
-</div>
+    <ins class="eas6a97888e2" data-zoneid="6057750"></ins>
+
+    <script>
+      (AdProvider = window.AdProvider || []).push({
+        "serve": {}
+      });
+    </script>
+  </div>
 
 
-  
-<!-- CRÉDITOS DO DESENVOLVEDOR -->
-<footer class="dev-credit">
-  Desenvolvido por
-  <a
-    href="https://www.linkedin.com/in/fabio-cristovam-4bb072264/?isSelfProfile=true"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Visitar meu perfil no LinkedIn"
-  >
-    Fabio Cristovam
-  </a>
-</footer>
+
+  <!-- CRÉDITOS DO DESENVOLVEDOR -->
+  <footer class="dev-credit">
+    Desenvolvido por
+    <a href="https://www.linkedin.com/in/fabio-cristovam-4bb072264/?isSelfProfile=true" target="_blank"
+      rel="noopener noreferrer" aria-label="Visitar meu perfil no LinkedIn">
+      Fabio Cristovam
+    </a>
+  </footer>
 
   <!-- LÓGICA DO JOGO -->
   <script src="script.js"></script>
@@ -215,7 +219,7 @@
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./sw.js").catch(() => {});
+        navigator.serviceWorker.register("./sw.js").catch(() => { });
       });
     }
   </script>
