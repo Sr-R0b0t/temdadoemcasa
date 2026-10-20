@@ -3,7 +3,7 @@
 // Troque VERSAO sempre que atualizar os arquivos do jogo.
 // ==========================================
 
-const VERSAO = "v1";
+const VERSAO = "v4";
 const CACHE = `dado-${VERSAO}`;
 
 const ARQUIVOS = [
@@ -15,7 +15,9 @@ const ARQUIVOS = [
   "./script.js",
   "./dates.js",
   "./timer.js",
-  "./manifest.webmanifest",
+  "./massagem.js",
+  "./massagem.css",
+  "./manifest.json",
   "./logo.png",
   "./icon-192.png",
   "./icon-512.png"
