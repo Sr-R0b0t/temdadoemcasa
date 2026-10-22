@@ -14,6 +14,65 @@
   let girando = false;
   let rodadas = 0;
 
+  // ==== SOM ====
+  // Tudo sintetizado pelo navegador (WebAudio): nenhum arquivo de áudio.
+  let audio = null;
+  let som = LS.get("roletaSom") !== "0";
+
+  function prepararAudio() {
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      if (!audio) audio = new Ctx();
+      if (audio.state === "suspended") audio.resume();
+    } catch (e) {
+      audio = null;
+    }
+  }
+
+  // "Tec" curtinho, a cada vez que uma fatia passa pelo ponteiro.
+  function tique() {
+    if (!som || !audio) return;
+
+    const t = audio.currentTime;
+    const osc = audio.createOscillator();
+    const ganho = audio.createGain();
+
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(1500 * (0.95 + Math.random() * 0.1), t);
+    osc.frequency.exponentialRampToValueAtTime(600, t + 0.03);
+    ganho.gain.setValueAtTime(0.18, t);
+    ganho.gain.exponentialRampToValueAtTime(0.001, t + 0.045);
+
+    osc.connect(ganho);
+    ganho.connect(audio.destination);
+    osc.start(t);
+    osc.stop(t + 0.05);
+  }
+
+  // Sininho quando a roleta para.
+  function ding() {
+    if (!som || !audio) return;
+
+    [880, 1320].forEach((freq, i) => {
+      const t = audio.currentTime + i * 0.04;
+      const osc = audio.createOscillator();
+      const ganho = audio.createGain();
+
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      ganho.gain.setValueAtTime(0.0001, t);
+      ganho.gain.exponentialRampToValueAtTime(0.2 / (i + 1), t + 0.01);
+      ganho.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+
+      osc.connect(ganho);
+      ganho.connect(audio.destination);
+      osc.start(t);
+      osc.stop(t + 0.95);
+    });
+  }
+  // ==== FIM SOM ====
+
   // ==== DESENHO ====
 
   function corDaFatia(i, n) {
@@ -277,9 +336,19 @@
   const bJog = botao("Jogadores", "ghost");
   const linhaRoda = el("div", "row");
   linhaRoda.append(bSpin, bJog);
+  const bSom = botao(som ? "🔔 Som" : "🔕 Mudo", "ghost");
   const bSair = botao("Encerrar", "ghost");
+  const linhaFim = el("div", "row");
+  linhaFim.append(bSom, bSair);
 
-  vRoda.append(rotuloRodada, caixaCanvas, resultado, pausa, linhaRoda, bSair);
+  bSom.onclick = () => {
+    som = !som;
+    LS.set("roletaSom", som ? "1" : "0");
+    bSom.textContent = som ? "🔔 Som" : "🔕 Mudo";
+    if (som) prepararAudio();
+  };
+
+  vRoda.append(rotuloRodada, caixaCanvas, resultado, pausa, linhaRoda, linhaFim);
 
   const ctx = canvas.getContext("2d");
   let tamanho = 340;
@@ -305,6 +374,8 @@
   function girar() {
     if (girando || nomes.length < MIN) return;
 
+    prepararAudio();
+
     girando = true;
     bSpin.disabled = true;
     bJog.disabled = true;
@@ -324,10 +395,24 @@
     const duracao = reduzir ? 600 : 5000;
     const t0 = performance.now();
 
+    let fatiaAnterior = fatiaNoTopo(inicio, n);
+    let tempoUltimoTique = 0;
+
     function passo(agora) {
       const p = Math.min(1, (agora - t0) / duracao);
       const suave = 1 - Math.pow(1 - p, 4);
       rot = inicio + (alvo - inicio) * suave;
+
+      // Um "tec" cada vez que o ponteiro muda de fatia (no máx. 1 a cada 35 ms).
+      const atual = fatiaNoTopo(rot, n);
+      if (atual !== fatiaAnterior) {
+        fatiaAnterior = atual;
+        if (agora - tempoUltimoTique > 35) {
+          tique();
+          tempoUltimoTique = agora;
+        }
+      }
+
       desenhar();
 
       if (p < 1) {
@@ -357,6 +442,7 @@
     resultado.textContent = "";
     resultado.appendChild(frase);
     resultado.classList.add("destaque");
+    ding();
 
     rotuloRodada.textContent = `Rodada ${rodadas + 1}`;
     bSpin.textContent = "Girar de novo";
