@@ -13,6 +13,8 @@
   let rot = 0; // rotação atual da roleta (radianos)
   let girando = false;
   let rodadas = 0;
+  let doses = 0;    // total de shots servidos na partida
+  let verde = -1;   // fatia verde da vez (vale 2 shots)
 
   // ==== SOM ====
   // Tudo sintetizado pelo navegador (WebAudio): nenhum arquivo de áudio.
@@ -75,10 +77,13 @@
 
   // ==== DESENHO ====
 
-  function corDaFatia(i, n) {
-    // Número ímpar de fatias: a última fica verde, como o zero da roleta
-    if (n % 2 === 1 && i === n - 1) return "#1b7a3a";
-    return i % 2 === 0 ? "#c1121f" : "#121214";
+  function corDaFatia(i, n, fatiaVerde) {
+    if (i === fatiaVerde) return "#1b7a3a";
+
+    // As demais alternam vermelho e preto a partir da fatia depois do verde,
+    // então nunca há duas fatias vizinhas da mesma cor.
+    const k = fatiaVerde < 0 ? i : (i - fatiaVerde - 1 + n) % n;
+    return k % 2 === 0 ? "#c1121f" : "#121214";
   }
 
   function ajustarTexto(ctx, texto, larguraMax, tamInicial) {
@@ -93,7 +98,7 @@
     return t === texto ? t : t.trimEnd() + "…";
   }
 
-  function desenharRoleta(ctx, tam, lista, giro) {
+  function desenharRoleta(ctx, tam, lista, giro, fatiaVerde) {
     const c = tam / 2;
     const R = c - 6;
     const rInt = R - 12;
@@ -122,7 +127,7 @@
       ctx.moveTo(0, 0);
       ctx.arc(0, 0, rInt, i * fatia, (i + 1) * fatia);
       ctx.closePath();
-      ctx.fillStyle = corDaFatia(i, n);
+      ctx.fillStyle = corDaFatia(i, n, fatiaVerde);
       ctx.fill();
       ctx.strokeStyle = "#d4af37";
       ctx.lineWidth = 1.5;
@@ -243,7 +248,7 @@
 
   vSetup.append(
     el("h2", "", "Roleta do Shot"),
-    el("p", "sub", "Adicione quem vai jogar (de 2 a 12 pessoas). Quem a roleta escolher toma um shot."),
+    el("p", "sub", "Adicione quem vai jogar (de 2 a 12 pessoas). Quem a roleta escolher toma um shot, e 2 shots se cair no verde."),
     linhaAdd,
     listaEl,
     contagem,
@@ -329,6 +334,7 @@
   canvas.setAttribute("aria-label", "Roleta com os nomes dos jogadores");
   const caixaCanvas = el("div", "rroleta");
   caixaCanvas.appendChild(canvas);
+  const legenda = el("p", "rpausa", "🟢 Verde = 2 shots");
   const resultado = el("div", "rresultado", "Gire a roleta");
   const pausa = el("p", "rpausa");
 
@@ -348,13 +354,13 @@
     if (som) prepararAudio();
   };
 
-  vRoda.append(rotuloRodada, caixaCanvas, resultado, pausa, linhaRoda, linhaFim);
+  vRoda.append(rotuloRodada, caixaCanvas, legenda, resultado, pausa, linhaRoda, linhaFim);
 
   const ctx = canvas.getContext("2d");
   let tamanho = 340;
 
   function desenhar() {
-    if (nomes.length >= MIN) desenharRoleta(ctx, tamanho, nomes, rot);
+    if (nomes.length >= MIN) desenharRoleta(ctx, tamanho, nomes, rot, verde);
   }
 
   function ajustarCanvas() {
@@ -385,6 +391,12 @@
     pausa.textContent = "";
 
     const n = nomes.length;
+
+    // Nova fatia verde sorteada antes do giro: todos têm a mesma chance de pegá-la.
+    verde = Math.floor(Math.random() * n);
+    resultado.style.borderColor = "";
+    desenhar();
+
     const vencedor = Math.floor(Math.random() * n);
     const desvio = (Math.random() - 0.5) * 0.7;
     const voltas = 5 + Math.floor(Math.random() * 3);
@@ -432,17 +444,25 @@
     rodadas++;
 
     const semAlcool = chk.checked;
+    const dobro = indice === verde;
+    const servidos = dobro ? 2 : 1;
+    const antes = doses;
+    doses += servidos;
+
+    const bebida = semAlcool ? " de água ou suco" : "";
+    const texto = dobro
+      ? ` caiu no verde e toma 2 shots${bebida}!`
+      : ` toma um shot${bebida}!`;
 
     // Tudo dentro de um único <span>, para os espaços não sumirem no flexbox.
     const frase = el("span");
-    frase.append(
-      el("b", "", nomes[indice]),
-      document.createTextNode(semAlcool ? " toma um shot de água ou suco!" : " toma um shot!")
-    );
+    frase.append(el("b", "", nomes[indice]), document.createTextNode(texto));
     resultado.textContent = "";
     resultado.appendChild(frase);
     resultado.classList.add("destaque");
+    resultado.style.borderColor = dobro ? "#1b7a3a" : "";
     ding();
+    if (dobro) setTimeout(ding, 350);
 
     rotuloRodada.textContent = `Rodada ${rodadas + 1}`;
     bSpin.textContent = "Girar de novo";
@@ -450,11 +470,12 @@
     bJog.disabled = false;
     bSair.disabled = false;
 
-    if (!semAlcool && rodadas % A_CADA === 0) {
+    // Pausa sugerida a cada 5 shots servidos (os 2 shots do verde contam em dobro).
+    if (!semAlcool && Math.floor(doses / A_CADA) > Math.floor(antes / A_CADA)) {
       pausa.textContent = "Pausa! Bebam água e comam algo antes da próxima.";
     }
 
-    if (navigator.vibrate) navigator.vibrate([200, 100, 300]);
+    if (navigator.vibrate) navigator.vibrate(dobro ? [200, 100, 200, 100, 400] : [200, 100, 300]);
   }
 
   bSpin.onclick = girar;
@@ -467,6 +488,8 @@
 
   bGirar.onclick = () => {
     rodadas = 0;
+    doses = 0;
+    verde = Math.floor(Math.random() * nomes.length);
     rot = 0;
     rotuloRodada.textContent = "Rodada 1";
     bSpin.textContent = "Girar";
