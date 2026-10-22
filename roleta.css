@@ -136,6 +136,19 @@
   min-height: 1.2em;
 }
 
+
+/* Botão da roleta na tela inicial: borda verde discreta */
+#b-roleta {
+  border-color: #17502f;
+}
+
+#b-roleta:hover {
+  background: #1b7a3a;
+  border-color: #1b7a3a;
+  color: #fff;
+  box-shadow: 0 0 24px #1b7a3a66;
+}
+
 /* Mesa de cassino: fundo verde e detalhes dourados enquanto a roleta está aberta */
 body.tema-roleta {
   background: radial-gradient(ellipse at 50% 0%, #0d3a22 0%, #06140d 70%) fixed;
