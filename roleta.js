@@ -14,7 +14,17 @@
   let girando = false;
   let rodadas = 0;
   let doses = 0;    // total de shots servidos na partida
-  let verde = -1;   // fatia verde da vez (vale 2 shots)
+  let verde = -1;   // fatia verde da vez (vale 2 shots); -1 = sem verde nesta rodada
+
+  // Meta: o "2 shots" sair em cerca de 20% dos giros, qualquer que seja o número de jogadores.
+  // Com 5 ou mais, o verde sempre aparece (cada fatia já vale 20% ou menos).
+  // Com 2, 3 ou 4, o verde só aparece em algumas rodadas (2 jogadores: 40%; 3: 60%; 4: 80%).
+  const ALVO_DOBRO = 0.2;
+
+  function sortearVerde(n) {
+    const chance = Math.min(1, ALVO_DOBRO * n);
+    return Math.random() < chance ? Math.floor(Math.random() * n) : -1;
+  }
 
   // ==== SOM ====
   // Tudo sintetizado pelo navegador (WebAudio): nenhum arquivo de áudio.
@@ -80,9 +90,15 @@
   function corDaFatia(i, n, fatiaVerde) {
     if (i === fatiaVerde) return "#1b7a3a";
 
-    // As demais alternam vermelho e preto a partir da fatia depois do verde,
+    // Sem verde: alternam vermelho e preto (se o número for ímpar, a última fica vinho).
+    if (fatiaVerde < 0) {
+      if (n % 2 === 1 && i === n - 1) return "#8f0f1b";
+      return i % 2 === 0 ? "#c1121f" : "#121214";
+    }
+
+    // Com verde: as demais alternam vermelho e preto a partir da fatia depois do verde,
     // então nunca há duas fatias vizinhas da mesma cor.
-    const k = fatiaVerde < 0 ? i : (i - fatiaVerde - 1 + n) % n;
+    const k = (i - fatiaVerde - 1 + n) % n;
     return k % 2 === 0 ? "#c1121f" : "#121214";
   }
 
@@ -248,7 +264,7 @@
 
   vSetup.append(
     el("h2", "", "Roleta do Shot"),
-    el("p", "sub", "Adicione quem vai jogar (de 2 a 12 pessoas). Quem a roleta escolher toma um shot, e 2 shots se cair no verde."),
+    el("p", "sub", "Adicione quem vai jogar (de 2 a 12 pessoas). Quem a roleta escolher toma um shot, e 2 shots se cair no verde (com poucos jogadores, o verde nem sempre aparece)."),
     linhaAdd,
     listaEl,
     contagem,
@@ -334,7 +350,11 @@
   canvas.setAttribute("aria-label", "Roleta com os nomes dos jogadores");
   const caixaCanvas = el("div", "rroleta");
   caixaCanvas.appendChild(canvas);
-  const legenda = el("p", "rpausa", "🟢 Verde = 2 shots");
+  const legenda = el("p", "rpausa");
+
+  function atualizarLegenda() {
+    legenda.textContent = verde >= 0 ? "🟢 Fatia verde = 2 shots" : "Sem fatia verde nesta rodada";
+  }
   const resultado = el("div", "rresultado", "Gire a roleta");
   const pausa = el("p", "rpausa");
 
@@ -392,8 +412,9 @@
 
     const n = nomes.length;
 
-    // Nova fatia verde sorteada antes do giro: todos têm a mesma chance de pegá-la.
-    verde = Math.floor(Math.random() * n);
+    // O verde é sorteado antes do giro (e pode nem aparecer, se houver poucos jogadores).
+    verde = sortearVerde(n);
+    atualizarLegenda();
     resultado.style.borderColor = "";
     desenhar();
 
@@ -489,7 +510,8 @@
   bGirar.onclick = () => {
     rodadas = 0;
     doses = 0;
-    verde = Math.floor(Math.random() * nomes.length);
+    verde = sortearVerde(nomes.length);
+    atualizarLegenda();
     rot = 0;
     rotuloRodada.textContent = "Rodada 1";
     bSpin.textContent = "Girar";
