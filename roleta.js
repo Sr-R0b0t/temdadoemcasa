@@ -353,7 +353,7 @@
   const legenda = el("p", "rpausa");
 
   function atualizarLegenda() {
-    legenda.textContent = verde >= 0 ? "🟢 Fatia verde = 2 shots" : "Sem fatia verde nesta rodada";
+    legenda.textContent = verde >= 0 ? "🟢 Verde = 2 shots" : "Sem Verde nesta rodada";
   }
   const resultado = el("div", "rresultado", "Gire a roleta");
   const pausa = el("p", "rpausa");
