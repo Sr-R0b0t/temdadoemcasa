@@ -2,6 +2,14 @@
 // DADO. — JOGO PARA DOIS
 // {A} = quem age
 // {B} = quem recebe
+//
+// AJUSTE POR GÊNERO
+// [masculino|feminino] → usa a forma feminina só quando
+//   as duas pessoas são mulheres (ex.: [juntos|juntas]).
+// { t: "...", h: "A" } → num casal homem + mulher, o homem
+//   faz o papel {A} (h: "B" = o homem é {B}). Se a vez for
+//   de quem não encaixa, os papéis são invertidos só nessa ação.
+//   Casais do mesmo gênero recebem a ação como está.
 // ==========================================
 
 const LEVELS = [
@@ -47,7 +55,7 @@ const LEVELS = [
       "{A} sussurra o que quer fazer com {B} hoje à noite",
       "{A} morde de leve o pescoço de {B}",
       "{A} beija as costas de {B} de cima a baixo",
-      "{A} senta no colo de {B} e beija devagar, sem pressa"
+      { t: "{A} senta no colo de {B} e beija devagar, sem pressa", h: "B" }
     ]
   },
   {
@@ -60,7 +68,7 @@ const LEVELS = [
       "{A} dá o comando: {B} segue por 1 minuto",
       "{A} beija {B} onde {B} permitir",
       "{A} faz massagem com óleo em {B}, sem pressa e sem pular nenhuma parte",
-      "{A} e {B} tomam banho juntos, com muita provocação",
+      "{A} e {B} tomam banho [juntos|juntas], com muita provocação",
       "{A} provoca {B} só com beijos e sopros, sem usar as mãos",
       "{A} faz {B} pedir por mais antes de continuar",
       "{A} diz em voz baixa as palavras que mais excitam {B}",
@@ -74,39 +82,39 @@ const LEVELS = [
   {
     name: "Sem limites",
     acts: [
-      "{A} e {B} experimentam a posição colherzinha (de lado, bem juntinhos)",
+      "{A} e {B} experimentam a posição colherzinha (de lado, bem [juntinhos|juntinhas])",
       "{A} e {B} escolhem entre papai e mamãe: olhos nos olhos, sem pressa",
-      "{B} por cima: {B} dita o ritmo e {A} acompanha",
-      "{A} e {B} sentados frente a frente, abraçados, movimento lento",
-      "{A} por trás de {B}, em pé, encostados na parede",
-      "{A} e {B} testam a posição de quatro, com {B} escolhendo o ritmo",
-      "{A} e {B} em posição 69, no ritmo que ambos gostarem",
+      { t: "{B} por cima: {B} dita o ritmo e {A} acompanha", h: "A" },
+      "{A} e {B} [sentados|sentadas] frente a frente, [abraçados|abraçadas], movimento lento",
+      { t: "{A} por trás de {B}, em pé, [encostados|encostadas] na parede", h: "A" },
+      { t: "{A} e {B} testam a posição de quatro, com {B} escolhendo o ritmo", h: "A" },
+      "{A} e {B} em posição 69, no ritmo que [ambos|ambas] gostarem",
       "{A} escolhe uma posição e {B} aprova ou escolhe outra",
       "{A} beija o corpo de {B} inteiro, descendo devagar, até onde {B} permitir",
       "{B} escolhe a posição e {A} segue o comando",
-      "{A} e {B} na posição lótus: sentados, abraçados, pernas entrelaçadas",
-      "{A} deita e {B} fica por cima, de costas, em posição invertida",
-      "{A} e {B} na beira da cama: {B} deita e {A} fica em pé",
-      "{A} senta numa cadeira ou no sofá e {B} senta no colo, de frente",
-      "{A} e {B} frente a frente em pé, com {B} se apoiando em {A}",
+      "{A} e {B} na posição lótus: [sentados|sentadas], [abraçados|abraçadas], pernas entrelaçadas",
+      { t: "{A} deita e {B} fica por cima, de costas, em posição invertida", h: "A" },
+      { t: "{A} e {B} na beira da cama: {B} deita e {A} fica em pé", h: "A" },
+      { t: "{A} senta numa cadeira ou no sofá e {B} senta no colo, de frente", h: "A" },
+      { t: "{A} e {B} frente a frente em pé, com {B} se apoiando em {A}", h: "A" },
       "{A} e {B} de lado, frente a frente, pernas entrelaçadas (posição tesoura)",
-      "{B} de joelhos na cama, com apoio, e {A} por trás, devagar",
-      "Papai e mamãe com as pernas de {B} elevadas nos ombros de {A}",
+      { t: "{B} de joelhos na cama, com apoio, e {A} por trás, devagar", h: "A" },
+      { t: "Papai e mamãe com as pernas de {B} elevadas nos ombros de {A}", h: "A" },
       "{A} e {B} no chuveiro ou perto de uma parede, com muito cuidado e carinho",
       "{A} e {B} trocam de posição a cada minuto, e {B} escolhe a próxima",
-      "{A} e {B} deitados de conchinha, e {A} leva o ritmo bem lento",
-      "{B} senta na borda de uma superfície firme e {A} fica de frente, em pé",
+      { t: "{A} e {B} [deitados|deitadas] de conchinha, e {A} leva o ritmo bem lento", h: "A" },
+      { t: "{B} senta na borda de uma superfície firme e {A} fica de frente, em pé", h: "A" },
       "{A} e {B} sorteiam: cada um sugere uma posição e a escolha vai no par ou ímpar",
-      "Posição livre: {A} e {B} escolhem juntos a favorita da noite",
+      "Posição livre: {A} e {B} escolhem [juntos|juntas] a favorita da noite",
       "{A} faz carícias íntimas em {B}, no ritmo que {B} pedir",
       "{A} faz oral em {B} por 2 minutos, depois trocam",
       "{A} e {B} se despem por completo e escolhem o que fazer, sem pressa",
       "{A} e {B} fazem um jogo de papéis: {A} escolhe os personagens",
       "{A} dá ordens por 2 minutos e {B} obedece, dentro dos limites combinados",
       "{A} e {B} sorteiam uma posição que nunca fizeram",
-      "{B} escolhe um cômodo da casa e os dois vão para lá",
+      "{B} escolhe um cômodo da casa e [os dois|as duas] vão para lá",
       "{A} e {B} escolhem uma palavra de segurança e jogam uma rodada de dominação leve",
-      "{A} e {B} decidem juntos como termina a noite"
+      "{A} e {B} decidem [juntos|juntas] como termina a noite"
     ]
   }
 ];
@@ -125,6 +133,7 @@ const show = id => {
 };
 
 let P = [];
+let G = [null, null]; // "h" = homem, "m" = mulher (mesma ordem de P)
 let turn = 0;
 let count = 0;
 let lvl = 0;
@@ -149,17 +158,47 @@ const HEAT = [
 
 $("b-start").onclick = () => show("s-names");
 $("b-names-back").onclick = () => show("s-start");
+$("b-level-back").onclick = () => show("s-names");
 
-// Troca a ordem dos nomes (quem começa).
+// Escolha de gênero (Homem / Mulher) de cada jogador.
+const GBOX = [$("g1"), $("g2")];
+
+function paintGender() {
+  GBOX.forEach((box, i) => {
+    [...box.children].forEach(chip => {
+      const on = chip.dataset.g === G[i];
+      chip.classList.toggle("on", on);
+      chip.setAttribute("aria-pressed", String(on));
+    });
+  });
+}
+
+GBOX.forEach((box, i) => {
+  box.onclick = event => {
+    const chip = event.target.closest("[data-g]");
+    if (!chip) return;
+    G[i] = chip.dataset.g;
+    $("names-err").textContent = "";
+    paintGender();
+  };
+});
+
+// Troca a ordem dos nomes (quem começa), junto com o gênero.
 $("b-swap").onclick = () => {
   const temp = $("n1").value;
   $("n1").value = $("n2").value;
   $("n2").value = temp;
+
+  G = [G[1], G[0]];
+  paintGender();
 };
 
 $("b-go").onclick = () => {
   const a = $("n1").value.trim();
   const b = $("n2").value.trim();
+  const err = $("names-err");
+
+  err.textContent = "";
 
   if (!a || !b) {
     (!a ? $("n1") : $("n2")).focus();
@@ -167,8 +206,13 @@ $("b-go").onclick = () => {
   }
 
   if (a.toLocaleLowerCase() === b.toLocaleLowerCase()) {
-    alert("Digite nomes diferentes para os jogadores.");
+    err.textContent = "Digite nomes diferentes para os jogadores.";
     $("n2").focus();
+    return;
+  }
+
+  if (!G[0] || !G[1]) {
+    err.textContent = `Escolha se ${!G[0] ? a : b} é homem ou mulher.`;
     return;
   }
 
@@ -212,6 +256,12 @@ LEVELS.forEach((level, index) => {
 $("b-end").onclick = () => {
   clearGameTimers();
   show("s-start");
+};
+
+// Volta para a escolha de fase sem perder os nomes.
+$("b-game-back").onclick = () => {
+  clearGameTimers();
+  show("s-level");
 };
 
 // ==========================================
@@ -283,6 +333,33 @@ function pick() {
 }
 
 // ==========================================
+// AJUSTE DO TEXTO PELO GÊNERO
+// ==========================================
+
+// A ação encaixa se o jogador de índice `a` fizer o papel {A}?
+function fits(act, a) {
+  if (typeof act === "string" || !act.h) return true;
+  if (G[0] === G[1]) return true; // mesmo gênero: vale como está
+
+  const man = G[0] === "h" ? 0 : 1;
+  const manRole = a === man ? "A" : "B";
+
+  return act.h === manRole;
+}
+
+// Monta o texto final: escolhe quem é {A}/{B} e faz a concordância.
+function build(act) {
+  const text = typeof act === "string" ? act : act.t;
+  const a = fits(act, turn) ? turn : 1 - turn;
+  const bothWomen = G[0] === "m" && G[1] === "m";
+
+  return esc(text)
+    .replace(/\[([^|\]]+)\|([^\]]+)\]/g, (_, masc, fem) => bothWomen ? fem : masc)
+    .replace(/\{A\}/g, `<b>${esc(P[a])}</b>`)
+    .replace(/\{B\}/g, `<b>${esc(P[1 - a])}</b>`);
+}
+
+// ==========================================
 // GIRAR O DADO
 // ==========================================
 
@@ -312,9 +389,7 @@ function roll() {
   rollTimeout = setTimeout(() => {
     rollTimeout = null;
 
-    const action = pick()
-      .replace(/\{A\}/g, `<b>${esc(P[turn])}</b>`)
-      .replace(/\{B\}/g, `<b>${esc(P[1 - turn])}</b>`);
+    const action = build(pick());
 
     $("act").innerHTML = `<span>${action}</span>`;
 

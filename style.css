@@ -583,3 +583,26 @@ input:focus {
     font-size: 0.7rem;
   }
 }
+
+/* JOGADOR: NOME + HOMEM / MULHER */
+
+.player {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.gender .chip {
+  min-width: 110px;
+}
+
+.names-err {
+  color: var(--red);
+  min-height: 1.2em;
+  margin: -10px 0;
+}
+
+.names-err:empty {
+  display: none;
+}

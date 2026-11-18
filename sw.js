@@ -3,7 +3,7 @@
 // Troque VERSAO sempre que atualizar os arquivos do jogo.
 // ==========================================
 
-const VERSAO = "v5";
+const VERSAO = "v6";
 const CACHE = `dado-${VERSAO}`;
 
 const ARQUIVOS = [

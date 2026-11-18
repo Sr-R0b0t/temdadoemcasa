@@ -245,9 +245,12 @@
   const pLinha = el("div", "row");
   const bTempo = botao("Iniciar tempo");
   const bProx = botao("Próxima etapa", "ghost");
+  const bVoltarPasso = botao("Voltar", "ghost");
   const bSair = botao("Encerrar", "ghost");
+  const pLinha2 = el("div", "row");
   pLinha.append(bTempo, bProx);
-  vPasso.append(pContador, pTitulo, pPapeis, pTexto, pRelogio, pLinha, bSair);
+  pLinha2.append(bVoltarPasso, bSair);
+  vPasso.append(pContador, pTitulo, pPapeis, pTexto, pRelogio, pLinha, pLinha2);
 
   function mostrarPasso() {
     const p = passos[i];
@@ -378,25 +381,56 @@
     }
   };
 
+  // Voltar: etapa anterior. Na 1ª etapa, volta para a escolha do
+  // estilo (1ª rodada) ou para a tela "Troquem de lugar" (2ª rodada).
+  bVoltarPasso.onclick = () => {
+    pararTudo();
+
+    if (i > 0) {
+      i--;
+      mostrarPasso();
+    } else if (rodada === 1) {
+      rodada = 0;
+      passos = passosRodada1;
+      i = passos.length - 1;
+      montarTroca();
+      ver("troca");
+    } else {
+      montarSetup();
+      ver("setup");
+    }
+  };
+
   bSair.onclick = () => {
     pararTudo();
     show("s-start");
   };
 
   // ----- troca de lugar -----
+  let passosRodada1 = [];
+
   function montarTroca() {
     vTroca.textContent = "";
+    const linha = el("div", "row");
     const b = botao("Continuar");
+    const bVoltar = botao("Voltar", "ghost");
     b.onclick = () => {
+      passosRodada1 = passos; // guarda para poder voltar
       rodada = 1;
       i = 0;
       passos = montarPassos(); // novo sorteio de textos e de surpresa
       mostrarPasso();
     };
+    bVoltar.onclick = () => {
+      // volta para a última etapa da 1ª rodada
+      i = passos.length - 1;
+      mostrarPasso();
+    };
+    linha.append(b, bVoltar);
     vTroca.append(
       el("h2", "", "Troquem de lugar"),
       el("p", "sub", `Agora ${nomes()[cfg.primeiro ^ 1]} recebe e ${nomes()[cfg.primeiro]} massageia. Façam uma pausa, se quiserem.`),
-      b
+      linha
     );
   }
 

@@ -83,15 +83,30 @@
     <h2>Quem vai jogar?</h2>
 
     <p class="sub">
-      O 1º jogador começa. Combinem antes quem será o 1º e o 2º:
-      os papéis se alternam a cada jogada e qualquer ação pode ser pulada.
+      O 1º jogador começa. Digam se cada um é homem ou mulher,
+      para os textos fazerem sentido. Os papéis se alternam a cada
+      jogada e qualquer ação pode ser pulada.
     </p>
 
-    <input id="n1" placeholder="1º jogador (começa)" maxlength="20" autocomplete="off">
+    <div class="player">
+      <input id="n1" placeholder="1º jogador (começa)" maxlength="20" autocomplete="off">
+      <div class="chips gender" id="g1" role="group" aria-label="1º jogador é">
+        <button type="button" class="chip" data-g="h" aria-pressed="false">Homem</button>
+        <button type="button" class="chip" data-g="m" aria-pressed="false">Mulher</button>
+      </div>
+    </div>
 
     <button id="b-swap" class="ghost" type="button">⇅ Trocar ordem</button>
 
-    <input id="n2" placeholder="2º jogador" maxlength="20" autocomplete="off">
+    <div class="player">
+      <input id="n2" placeholder="2º jogador" maxlength="20" autocomplete="off">
+      <div class="chips gender" id="g2" role="group" aria-label="2º jogador é">
+        <button type="button" class="chip" data-g="h" aria-pressed="false">Homem</button>
+        <button type="button" class="chip" data-g="m" aria-pressed="false">Mulher</button>
+      </div>
+    </div>
+
+    <p class="sub names-err" id="names-err" role="alert"></p>
 
     <div class="row">
       <button id="b-go">Começar</button>
@@ -108,6 +123,8 @@
     </p>
 
     <div class="lvlist" id="lvlist"></div>
+
+    <button id="b-level-back" class="ghost" type="button">Voltar</button>
   </section>
 
   <!-- JOGO -->
@@ -137,9 +154,14 @@
       </button>
     </div>
 
-    <button id="b-end" class="ghost">
-      Encerrar
-    </button>
+    <div class="row">
+      <button id="b-game-back" class="ghost" type="button">
+        Voltar às fases
+      </button>
+      <button id="b-end" class="ghost" type="button">
+        Encerrar
+      </button>
+    </div>
   </section>
 
   <!-- AVISO DE NOVA FASE -->
